@@ -1,0 +1,77 @@
+@startuml ShoppingCart-JDBC
+package models {
+  class Course{
+    - id: int
+    - name: String
+    - price: double
+    - rate: double
+    - author: String
+    - image: String
+    + toString(): String
+    + getDiscount(): double
+  }
+
+}
+
+package controllers {
+  class ShoppingCartController {
+    - ShoppingCartService: shoppingCartService
+    + addCourse(int id): void
+    + deleteCourse(int id): void
+    + getCourses(): List<Course>
+    + cleanListCourse(): void
+  }
+}
+
+package service {
+  interface ShoppingCartService {
+    + addCourse(int id): void
+    + deleteCourse(int id): void
+    + getCourses(): List<Course>
+    + cleanListCourse(): void
+  }
+  
+  class ShoppingCartServiceImpl extends ShoppingCartService {
+    - shoppingCartDAO: ShoppingCartDAO
+    + addCourse(int id): void
+    + deleteCourse(int id): void
+    + getCourses(): List<Course>
+    + cleanListCourse(): void
+  }
+
+}
+
+
+package "repository" {
+  
+  interface ShoppingCartDAO {
+    + addCourse(int id): void
+    + deleteCourse(int id): void
+    + getCourses(): List<Course>
+    + cleanListCourse(): void
+  }
+
+  class DAO extends JdbcTemplate {
+    
+  }
+
+  class ShoppingCartDAOImpl extends ShoppingCartDAO {
+    + addCourse(int id): void
+    + deleteCourse(int id): void
+    + getCourses(): List<Course>
+    + cleanListCourse(): void
+  }
+
+}
+
+ShoppingCartController *--> ShoppingCartService
+DAO <|- ShoppingCartDAOImpl
+ShoppingCartDAO ..> Course
+ShoppingCartService ..> Course
+ShoppingCartDAOImpl ..> Course
+ShoppingCartServiceImpl ..> Course
+ShoppingCartController ..> Course
+ShoppingCartServiceImpl *--> ShoppingCartDAO
+
+@enduml
+
